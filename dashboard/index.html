@@ -26,7 +26,41 @@
       <!-- "Friday, April 4, 2026" — written by getDateDisplay() in app.js -->
       <div class="date" id="dateDisplay"></div>
     </div>
+    <div class="header-right">
+      <div class="weather-widget" id="weatherWidget" style="display:none"></div>
+      <div class="pomodoro" id="pomodoro">
+        <span class="pomodoro-time" id="pomodoroTime">25:00</span>
+        <button class="pomodoro-btn" data-action="pomodoro-toggle" title="Start timer">&#9654;</button>
+        <button class="pomodoro-btn" data-action="pomodoro-reset" title="Reset timer">&#8634;</button>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle" title="Toggle dark mode">
+        <svg id="darkModeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="18" height="18">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+        </svg>
+      </button>
+      <div class="header-clock" id="headerClock"></div>
+    </div>
   </header>
+
+  <!-- ================================================================
+       QUICK LINKS — most-used sites
+       ================================================================ -->
+  <nav class="quick-links" id="quickLinksNav"></nav>
+
+  <!-- ================================================================
+       SEARCH BAR — Google search
+       ================================================================ -->
+  <form class="search-bar" action="https://www.google.com/search" method="get" target="_top">
+    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+    </svg>
+    <input type="text" name="q" class="search-input" placeholder="Search Google..." autocomplete="off">
+  </form>
+
+  <!-- ================================================================
+       DAILY QUOTE
+       ================================================================ -->
+  <div class="daily-quote" id="dailyQuote"></div>
 
   <!-- ================================================================
        TAB OUT DUPES BANNER — appears when you have extra Tab Out tabs open
@@ -94,6 +128,19 @@
       </div>
     </div>
 
+    <!-- Recently Closed Tabs — collapsible section -->
+    <div class="recently-closed-section" id="recentlyClosedSection" style="display:none">
+      <button class="archive-toggle" id="recentlyClosedToggle">
+        <svg class="archive-chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+        Recently closed
+        <span class="archive-count" id="recentlyClosedCount"></span>
+      </button>
+      <div class="recently-closed-body" id="recentlyClosedBody" style="display:none">
+        <div class="recently-closed-list" id="recentlyClosedList"></div>
+        <button class="action-btn" data-action="clear-recently-closed" style="margin-top:8px;width:100%;justify-content:center;">Clear all</button>
+      </div>
+    </div>
+
   </div><!-- end .dashboard-columns -->
 
   <!-- ================================================================
@@ -107,7 +154,6 @@
       </div>
     </div>
     <div class="last-refresh">
-      <span style="color: var(--muted); font-size: 11px;"><a href="https://github.com/zarazhangrui/tab-out" target="_top" style="color: var(--muted); text-decoration: underline; text-underline-offset: 2px;">Tab Out</a> by <a href="https://x.com/zarazhangrui" target="_top" style="color: var(--muted); text-decoration: underline; text-underline-offset: 2px;">Zara</a></span>
     </div>
   </footer>
 

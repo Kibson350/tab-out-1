@@ -20,6 +20,20 @@
   --shadow: rgba(26, 22, 19, 0.06);
 }
 
+/* ---- Dark Mode ---- */
+body.dark-mode {
+  --ink: #e8e2da;
+  --paper: #1a1a1f;
+  --warm-gray: #2a2a30;
+  --muted: #8a8580;
+  --card-bg: #222228;
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode::before {
+  opacity: 0.01;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -73,6 +87,209 @@ header {
   font-weight: 400;
   letter-spacing: 0.5px;
   text-transform: uppercase;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-clock {
+  font-family: 'Newsreader', serif;
+  font-size: 36px;
+  font-weight: 300;
+  color: var(--ink);
+  letter-spacing: -1px;
+}
+
+/* ---- Dark Mode Toggle ---- */
+.dark-mode-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--warm-gray);
+  background: var(--card-bg);
+  cursor: pointer;
+  color: var(--muted);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.dark-mode-toggle:hover {
+  border-color: var(--accent-amber);
+  color: var(--ink);
+}
+
+/* ---- Weather Widget ---- */
+.weather-widget {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+/* ---- Pomodoro Timer ---- */
+.pomodoro {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--warm-gray);
+  border-radius: 6px;
+}
+
+.pomodoro-time {
+  font-family: 'Newsreader', serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--ink);
+  min-width: 42px;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+.pomodoro-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 14px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: color 0.15s;
+}
+
+.pomodoro-btn:hover {
+  color: var(--ink);
+}
+
+.pomodoro.running .pomodoro-time {
+  color: var(--accent-amber);
+}
+
+.pomodoro.on-break .pomodoro-time {
+  color: var(--accent-sage);
+}
+
+/* ---- Quick Links ---- */
+.quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 32px;
+  animation: fadeUp 0.5s ease 0.1s both;
+}
+
+.quick-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--card-bg);
+  border: 1px solid var(--warm-gray);
+  border-radius: 50%;
+  text-decoration: none;
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+.quick-link:hover {
+  box-shadow: 0 4px 16px var(--shadow);
+  transform: translateY(-2px);
+  border-color: var(--accent-amber);
+}
+
+.quick-link-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+}
+
+.quick-link[draggable="true"] {
+  cursor: grab;
+}
+
+.quick-link.drag-over {
+  border-color: var(--accent-amber);
+  transform: scale(1.15);
+}
+
+.quick-link.dragging {
+  opacity: 0.4;
+}
+
+/* ---- Search Bar ---- */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 560px;
+  margin: 0 auto 24px;
+  padding: 12px 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--warm-gray);
+  border-radius: 8px;
+  transition: border-color 0.2s;
+  animation: fadeUp 0.5s ease 0.15s both;
+}
+
+.search-bar:focus-within {
+  border-color: var(--accent-amber);
+}
+
+.search-icon {
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--muted);
+}
+
+/* ---- Daily Quote ---- */
+.daily-quote {
+  text-align: center;
+  font-family: 'Newsreader', serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--muted);
+  max-width: 600px;
+  margin: -8px auto 32px;
+  padding: 0 16px;
+  line-height: 1.6;
+  animation: fadeUp 0.5s ease 0.2s both;
+}
+
+.quote-author {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+/* ---- Recently Closed ---- */
+.recently-closed-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--warm-gray);
 }
 
 /* ---- Tab cleanup banner ---- */

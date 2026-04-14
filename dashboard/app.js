@@ -10,6 +10,322 @@
 
 'use strict';
 
+/* ----------------------------------------------------------------
+   DARK MODE — apply immediately to prevent flash
+   ---------------------------------------------------------------- */
+if (localStorage.getItem('tabout-dark-mode') === 'true') {
+  document.body.classList.add('dark-mode');
+}
+
+const ICON_SUN = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" /></svg>';
+const ICON_MOON = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" /></svg>';
+
+/* ----------------------------------------------------------------
+   QUICK LINKS DATA
+   ---------------------------------------------------------------- */
+const DEFAULT_QUICK_LINKS = [
+  { url: 'https://www.google.com', title: 'Google', icon: 'https://www.google.com/favicon.ico' },
+  { url: 'https://mail.google.com/chat/', title: 'Google Chat', icon: 'https://www.google.com/s2/favicons?domain=chat.google.com&sz=32' },
+  { url: 'https://web.whatsapp.com', title: 'WhatsApp', icon: 'https://static.whatsapp.net/rsrc.php/v3/yP/r/rYZqPCBaG70.png' },
+  { url: 'https://www.fiverr.com/seller_dashboard', title: 'Fiverr', icon: 'https://www.fiverr.com/favicon.ico' },
+  { url: 'https://docs.google.com/spreadsheets/d/14JdVdf0upNUuH7U3YjANOgfE29zsTCarbCCaPNrkoHc/edit?pli=1&gid=1805970936#gid=1805970936', title: 'Master Sheet', icon: 'https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico' },
+  { url: 'https://app.rocketmoney.com/', title: 'Rocket Money', icon: 'https://www.google.com/s2/favicons?domain=rocketmoney.com&sz=32' },
+  { url: 'https://github.com', title: 'GitHub', icon: 'https://github.com/favicon.ico' },
+  { url: 'https://www.perplexity.ai/', title: 'Perplexity', icon: 'https://www.google.com/s2/favicons?domain=perplexity.ai&sz=32' },
+  { url: 'https://claude.ai', title: 'Claude', icon: 'https://www.google.com/s2/favicons?domain=claude.ai&sz=32' },
+  { url: 'https://aistudio.google.com/prompts/new_chat', title: 'AI Studio', icon: 'https://www.google.com/s2/favicons?domain=aistudio.google.com&sz=32' },
+  { url: 'https://chatgpt.com/', title: 'ChatGPT', icon: 'https://www.google.com/s2/favicons?domain=chatgpt.com&sz=32' },
+  { url: 'https://grok.com/', title: 'Grok', icon: 'https://www.google.com/s2/favicons?domain=grok.com&sz=32' },
+  { url: 'https://gemini.google.com/', title: 'Gemini', icon: 'https://www.google.com/s2/favicons?domain=gemini.google.com&sz=32' },
+  { url: 'https://portal.markstudios.com/', title: 'Mark Studios Portal', icon: 'https://www.google.com/s2/favicons?domain=markstudios.com&sz=32' },
+  { url: 'https://x.com', title: 'X', icon: 'https://www.google.com/s2/favicons?domain=x.com&sz=32' },
+  { url: 'https://www.youtube.com', title: 'YouTube', icon: 'https://www.youtube.com/favicon.ico' },
+  { url: 'https://kick.com/', title: 'Kick', icon: 'https://www.google.com/s2/favicons?domain=kick.com&sz=32' },
+  { url: 'https://letterboxd.com/', title: 'Letterboxd', icon: 'https://www.google.com/s2/favicons?domain=letterboxd.com&sz=32' },
+];
+
+/* ----------------------------------------------------------------
+   DAILY QUOTES
+   ---------------------------------------------------------------- */
+const QUOTES = [
+  { text: 'The best time to plant a tree was 20 years ago. The second best time is now.', author: 'Chinese Proverb' },
+  { text: 'Done is better than perfect.', author: 'Sheryl Sandberg' },
+  { text: 'Simplicity is the ultimate sophistication.', author: 'Leonardo da Vinci' },
+  { text: 'The only way to do great work is to love what you do.', author: 'Steve Jobs' },
+  { text: 'Ship it.', author: 'Every startup ever' },
+  { text: 'First, solve the problem. Then, write the code.', author: 'John Johnson' },
+  { text: 'Make it work, make it right, make it fast.', author: 'Kent Beck' },
+  { text: 'Talk is cheap. Show me the code.', author: 'Linus Torvalds' },
+  { text: 'The impediment to action advances action. What stands in the way becomes the way.', author: 'Marcus Aurelius' },
+  { text: 'Discipline equals freedom.', author: 'Jocko Willink' },
+  { text: 'We are what we repeatedly do. Excellence, then, is not an act, but a habit.', author: 'Aristotle' },
+  { text: 'Stay hungry. Stay foolish.', author: 'Steve Jobs' },
+  { text: 'Your time is limited, don\'t waste it living someone else\'s life.', author: 'Steve Jobs' },
+  { text: 'Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away.', author: 'Antoine de Saint-Exupery' },
+  { text: 'The best way to predict the future is to create it.', author: 'Peter Drucker' },
+  { text: 'It does not matter how slowly you go as long as you do not stop.', author: 'Confucius' },
+  { text: 'Everything you\'ve ever wanted is on the other side of fear.', author: 'George Addair' },
+  { text: 'The man who moves a mountain begins by carrying away small stones.', author: 'Confucius' },
+  { text: 'Do what you can, with what you have, where you are.', author: 'Theodore Roosevelt' },
+  { text: 'Hard choices, easy life. Easy choices, hard life.', author: 'Jerzy Gregorek' },
+  { text: 'If you want to go fast, go alone. If you want to go far, go together.', author: 'African Proverb' },
+  { text: 'Focus is saying no to a thousand good ideas.', author: 'Steve Jobs' },
+  { text: 'The secret of getting ahead is getting started.', author: 'Mark Twain' },
+  { text: 'What gets measured gets managed.', author: 'Peter Drucker' },
+  { text: 'Be so good they can\'t ignore you.', author: 'Steve Martin' },
+  { text: 'The obstacle is the way.', author: 'Ryan Holiday' },
+  { text: 'Move fast and break things. Unless you are breaking stuff, you are not moving fast enough.', author: 'Mark Zuckerberg' },
+  { text: 'Ideas are easy. Implementation is hard.', author: 'Guy Kawasaki' },
+  { text: 'A year from now you may wish you had started today.', author: 'Karen Lamb' },
+  { text: 'Luck is what happens when preparation meets opportunity.', author: 'Seneca' },
+];
+
+function getDailyQuote() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((now - start) / 86400000);
+  return QUOTES[dayOfYear % QUOTES.length];
+}
+
+/* ----------------------------------------------------------------
+   POMODORO STATE
+   ---------------------------------------------------------------- */
+let pomodoroState = { running: false, secondsLeft: 25 * 60, isBreak: false, intervalId: null, lastTick: null };
+
+function loadPomodoroState() {
+  const saved = localStorage.getItem('tabout-pomodoro');
+  if (!saved) return;
+  try {
+    const s = JSON.parse(saved);
+    pomodoroState.secondsLeft = s.secondsLeft;
+    pomodoroState.isBreak = s.isBreak;
+    pomodoroState.running = s.running;
+    pomodoroState.lastTick = s.lastTick;
+    // Account for time elapsed while page was closed
+    if (s.running && s.lastTick) {
+      const elapsed = Math.floor((Date.now() - s.lastTick) / 1000);
+      pomodoroState.secondsLeft = Math.max(0, s.secondsLeft - elapsed);
+    }
+  } catch { /* ignore */ }
+}
+
+function savePomodoroState() {
+  localStorage.setItem('tabout-pomodoro', JSON.stringify({
+    secondsLeft: pomodoroState.secondsLeft,
+    isBreak: pomodoroState.isBreak,
+    running: pomodoroState.running,
+    lastTick: pomodoroState.running ? Date.now() : null,
+  }));
+}
+
+function updatePomodoroDisplay() {
+  const el = document.getElementById('pomodoroTime');
+  if (!el) return;
+  const m = Math.floor(pomodoroState.secondsLeft / 60);
+  const s = pomodoroState.secondsLeft % 60;
+  el.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+  const container = document.getElementById('pomodoro');
+  if (container) {
+    container.classList.toggle('running', pomodoroState.running && !pomodoroState.isBreak);
+    container.classList.toggle('on-break', pomodoroState.running && pomodoroState.isBreak);
+  }
+}
+
+function pomodoroTick() {
+  pomodoroState.secondsLeft--;
+  pomodoroState.lastTick = Date.now();
+  if (pomodoroState.secondsLeft <= 0) {
+    pomodoroState.running = false;
+    clearInterval(pomodoroState.intervalId);
+    pomodoroState.intervalId = null;
+    if (pomodoroState.isBreak) {
+      showToast('Break over! Time to focus.');
+      pomodoroState.isBreak = false;
+      pomodoroState.secondsLeft = 25 * 60;
+    } else {
+      showToast('Time for a break!');
+      pomodoroState.isBreak = true;
+      pomodoroState.secondsLeft = 5 * 60;
+    }
+    const btn = document.querySelector('[data-action="pomodoro-toggle"]');
+    if (btn) btn.innerHTML = '&#9654;';
+  }
+  savePomodoroState();
+  updatePomodoroDisplay();
+}
+
+function startPomodoro() {
+  pomodoroState.running = true;
+  pomodoroState.lastTick = Date.now();
+  pomodoroState.intervalId = setInterval(pomodoroTick, 1000);
+  const btn = document.querySelector('[data-action="pomodoro-toggle"]');
+  if (btn) btn.innerHTML = '&#9646;&#9646;';
+  savePomodoroState();
+  updatePomodoroDisplay();
+}
+
+function pausePomodoro() {
+  pomodoroState.running = false;
+  clearInterval(pomodoroState.intervalId);
+  pomodoroState.intervalId = null;
+  const btn = document.querySelector('[data-action="pomodoro-toggle"]');
+  if (btn) btn.innerHTML = '&#9654;';
+  savePomodoroState();
+  updatePomodoroDisplay();
+}
+
+function resetPomodoro() {
+  pomodoroState.running = false;
+  pomodoroState.isBreak = false;
+  pomodoroState.secondsLeft = 25 * 60;
+  clearInterval(pomodoroState.intervalId);
+  pomodoroState.intervalId = null;
+  const btn = document.querySelector('[data-action="pomodoro-toggle"]');
+  if (btn) btn.innerHTML = '&#9654;';
+  savePomodoroState();
+  updatePomodoroDisplay();
+}
+
+/* ----------------------------------------------------------------
+   RECENTLY CLOSED TABS
+   ---------------------------------------------------------------- */
+function saveToRecentlyClosed(url, title) {
+  const key = 'tabout-recently-closed';
+  const list = JSON.parse(localStorage.getItem(key) || '[]');
+  list.unshift({ url, title, closedAt: new Date().toISOString() });
+  if (list.length > 20) list.length = 20;
+  localStorage.setItem(key, JSON.stringify(list));
+}
+
+function renderRecentlyClosed() {
+  const section = document.getElementById('recentlyClosedSection');
+  const list = JSON.parse(localStorage.getItem('tabout-recently-closed') || '[]');
+  if (!section) return;
+  if (list.length === 0) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  const countEl = document.getElementById('recentlyClosedCount');
+  if (countEl) countEl.textContent = list.length;
+  const listEl = document.getElementById('recentlyClosedList');
+  if (!listEl) return;
+  listEl.innerHTML = list.map((item, i) => {
+    const domain = (() => { try { return new URL(item.url).hostname; } catch { return ''; } })();
+    return `<div class="archive-item">
+      <a href="${item.url}" target="_top" class="archive-item-title" data-action="reopen-closed-tab" data-index="${i}" title="${item.title}">${item.title || item.url}</a>
+      <span class="archive-item-date">${timeAgo(item.closedAt)}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ----------------------------------------------------------------
+   QUICK LINKS — render + drag-to-reorder
+   ---------------------------------------------------------------- */
+function getQuickLinks() {
+  const saved = localStorage.getItem('tabout-quick-links-order');
+  if (saved) {
+    try { return JSON.parse(saved); } catch { /* fall through */ }
+  }
+  return DEFAULT_QUICK_LINKS;
+}
+
+function saveQuickLinksOrder(links) {
+  localStorage.setItem('tabout-quick-links-order', JSON.stringify(links));
+}
+
+function renderQuickLinks() {
+  const nav = document.getElementById('quickLinksNav');
+  if (!nav) return;
+  const links = getQuickLinks();
+  nav.innerHTML = links.map((link, i) =>
+    `<a href="${link.url}" class="quick-link" target="_top" title="${link.title}" draggable="true" data-link-index="${i}">
+      <img src="${link.icon}" alt="${link.title}" class="quick-link-icon">
+    </a>`
+  ).join('');
+  initQuickLinkDrag();
+}
+
+function initQuickLinkDrag() {
+  const nav = document.getElementById('quickLinksNav');
+  if (!nav) return;
+  let dragSrcIndex = null;
+
+  nav.addEventListener('dragstart', (e) => {
+    const link = e.target.closest('.quick-link');
+    if (!link) return;
+    dragSrcIndex = parseInt(link.dataset.linkIndex);
+    link.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', dragSrcIndex);
+  });
+
+  nav.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const target = e.target.closest('.quick-link');
+    nav.querySelectorAll('.quick-link').forEach(l => l.classList.remove('drag-over'));
+    if (target) target.classList.add('drag-over');
+  });
+
+  nav.addEventListener('dragleave', (e) => {
+    const target = e.target.closest('.quick-link');
+    if (target) target.classList.remove('drag-over');
+  });
+
+  nav.addEventListener('dragend', (e) => {
+    nav.querySelectorAll('.quick-link').forEach(l => {
+      l.classList.remove('dragging', 'drag-over');
+    });
+  });
+
+  nav.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const target = e.target.closest('.quick-link');
+    if (!target) return;
+    const dropIndex = parseInt(target.dataset.linkIndex);
+    if (dragSrcIndex === null || dragSrcIndex === dropIndex) return;
+    const links = getQuickLinks();
+    const [moved] = links.splice(dragSrcIndex, 1);
+    links.splice(dropIndex, 0, moved);
+    saveQuickLinksOrder(links);
+    renderQuickLinks();
+    showToast('Links reordered');
+  });
+}
+
+/* ----------------------------------------------------------------
+   WEATHER
+   ---------------------------------------------------------------- */
+async function fetchWeather() {
+  const cacheKey = 'tabout-weather-cache';
+  const cached = localStorage.getItem(cacheKey);
+  if (cached) {
+    try {
+      const data = JSON.parse(cached);
+      if (Date.now() - data.timestamp < 30 * 60 * 1000) return data;
+    } catch { /* refetch */ }
+  }
+  const resp = await fetch('https://wttr.in/?format=%t+%C');
+  const text = (await resp.text()).trim();
+  // Parse "72°F Partly cloudy" or "+72°F Partly cloudy"
+  const match = text.match(/^([+\-]?\d+°[CF])\s+(.+)$/);
+  const result = match
+    ? { temp: match[1], condition: match[2], timestamp: Date.now() }
+    : { temp: text, condition: '', timestamp: Date.now() };
+  localStorage.setItem(cacheKey, JSON.stringify(result));
+  return result;
+}
+
+async function renderWeather() {
+  const el = document.getElementById('weatherWidget');
+  if (!el) return;
+  try {
+    const w = await fetchWeather();
+    el.textContent = w.condition ? `${w.temp} · ${w.condition}` : w.temp;
+    el.style.display = 'block';
+  } catch {
+    el.style.display = 'none';
+  }
+}
+
 
 /* ----------------------------------------------------------------
    EXTENSION BRIDGE
@@ -1096,6 +1412,58 @@ async function renderStaticDashboard() {
   if (greetingEl) greetingEl.textContent = getGreeting();
   if (dateEl)     dateEl.textContent     = getDateDisplay();
 
+  // --- Header: live clock ---
+  const clockEl = document.getElementById('headerClock');
+  if (clockEl) {
+    function updateClock() {
+      clockEl.textContent = new Date().toLocaleTimeString('en-US', {
+        hour: 'numeric', minute: '2-digit', hour12: true
+      });
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+  }
+
+  // --- Dark mode toggle icon ---
+  const darkToggle = document.getElementById('darkModeToggle');
+  if (darkToggle) {
+    const iconEl = document.getElementById('darkModeIcon');
+    if (iconEl) {
+      iconEl.outerHTML = document.body.classList.contains('dark-mode') ? ICON_SUN : ICON_MOON;
+    }
+    darkToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('tabout-dark-mode', isDark);
+      darkToggle.innerHTML = isDark ? ICON_SUN : ICON_MOON;
+    });
+  }
+
+  // --- Quick links ---
+  renderQuickLinks();
+
+  // --- Daily quote ---
+  const quoteEl = document.getElementById('dailyQuote');
+  if (quoteEl) {
+    const q = getDailyQuote();
+    quoteEl.innerHTML = `\u201c${q.text}\u201d <span class="quote-author">\u2014 ${q.author}</span>`;
+  }
+
+  // --- Weather ---
+  renderWeather();
+
+  // --- Pomodoro ---
+  loadPomodoroState();
+  updatePomodoroDisplay();
+  if (pomodoroState.running) {
+    // Resume the timer if it was running
+    if (pomodoroState.secondsLeft > 0) {
+      startPomodoro();
+    } else {
+      pomodoroTick(); // will handle completion
+    }
+  }
+
   // ── Step 1: Fetch open tabs ───────────────────────────────────────────────
   await fetchOpenTabs();
   const realTabs = getRealTabs();
@@ -1211,6 +1579,9 @@ async function renderStaticDashboard() {
 
   // ── Step 9: Render the "Saved for Later" checklist column ────────────────
   await renderDeferredColumn();
+
+  // ── Step 10: Render recently closed tabs ────────────────────────────────
+  renderRecentlyClosed();
 }
 
 
@@ -1244,6 +1615,24 @@ document.addEventListener('click', async (e) => {
 
   const action    = actionEl.dataset.action;
   const missionId = actionEl.dataset.missionId;
+
+  // --- Pomodoro controls ---
+  if (action === 'pomodoro-toggle') {
+    if (pomodoroState.running) { pausePomodoro(); } else { startPomodoro(); }
+    return;
+  }
+  if (action === 'pomodoro-reset') {
+    resetPomodoro();
+    return;
+  }
+
+  // --- Clear recently closed ---
+  if (action === 'clear-recently-closed') {
+    localStorage.removeItem('tabout-recently-closed');
+    renderRecentlyClosed();
+    showToast('Cleared recently closed tabs');
+    return;
+  }
 
   // --- Close duplicate Tab Out tabs ---
   if (action === 'close-tabout-dupes') {
@@ -1288,12 +1677,14 @@ document.addEventListener('click', async (e) => {
     const tabUrl = actionEl.dataset.tabUrl;
     if (!tabUrl) return;
 
+    const chip = actionEl.closest('.page-chip');
+    const chipTitle = chip ? (chip.querySelector('.chip-text')?.textContent || tabUrl) : tabUrl;
+    saveToRecentlyClosed(tabUrl, chipTitle);
     await sendToExtension('closeTabs', { urls: [tabUrl] });
     playCloseSound();
     await fetchOpenTabs();
 
     // Remove the chip from the DOM with confetti
-    const chip = actionEl.closest('.page-chip');
     if (chip) {
       const rect = chip.getBoundingClientRect();
       shootConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -1318,6 +1709,7 @@ document.addEventListener('click', async (e) => {
     }
 
     showToast('Tab closed');
+    renderRecentlyClosed();
     return;
   }
 
@@ -1430,6 +1822,7 @@ document.addEventListener('click', async (e) => {
     if (!group) return;
 
     const urls = group.tabs.map(t => t.url);
+    group.tabs.forEach(t => saveToRecentlyClosed(t.url, t.title || t.url));
     // Use exact URL matching for landing pages (share domains with content tabs)
     const useExact = group.domain === '__landing-pages__';
     await sendToExtension('closeTabs', { urls, exact: useExact });
@@ -1447,6 +1840,7 @@ document.addEventListener('click', async (e) => {
 
     const groupLabel = group.domain === '__landing-pages__' ? 'Homepages' : friendlyDomain(group.domain);
     showToast(`Closed ${urls.length} tab${urls.length !== 1 ? 's' : ''} from ${groupLabel}`);
+    renderRecentlyClosed();
 
     // Update footer tab count
     const statTabs = document.getElementById('statTabs');
@@ -1618,6 +2012,18 @@ document.addEventListener('click', (e) => {
 
   toggle.classList.toggle('open');
   const body = document.getElementById('archiveBody');
+  if (body) {
+    body.style.display = body.style.display === 'none' ? 'block' : 'none';
+  }
+});
+
+// ---- Recently closed toggle — expand/collapse ----
+document.addEventListener('click', (e) => {
+  const toggle = e.target.closest('#recentlyClosedToggle');
+  if (!toggle) return;
+
+  toggle.classList.toggle('open');
+  const body = document.getElementById('recentlyClosedBody');
   if (body) {
     body.style.display = body.style.display === 'none' ? 'block' : 'none';
   }
