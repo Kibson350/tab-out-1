@@ -1,147 +1,132 @@
-<div align="center">
-
 # Tab Out
 
 **Keep tabs on your tabs.**
 
-![Chrome](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](#)
+Tab Out replaces your new tab page with a clean dashboard of everything you have open — grouped by domain, with one-click close, duplicate detection, save for later, and more.
 
-[Features](#-features) · [Getting Started](#-getting-started) · [Tech Stack](#️-tech-stack)
+Works in both **Chrome** and **Safari**.
 
-</div>
+![Tab Out screenshot](assets/screenshot.png)
 
 ---
 
-<div align="center">
+## Features
 
-![Tab Out Dashboard](screenshot.png)
-
-</div>
-
----
-
-Tab Out replaces your Chrome new tab page with a dashboard that shows everything you have open — grouped by domain, with landing pages (Gmail, X, LinkedIn, etc.) pulled into their own group for easy cleanup. Close tabs with a satisfying swoosh + confetti.
-
-Built for people who open too many tabs and never close them.
-
----
-
-## ✨ Features
-
-- **See all your tabs at a glance** — grouped by domain on a clean grid, no more squinting at 30 tiny tab titles
-- **Landing pages group** — homepages and feeds (Gmail, X, LinkedIn, GitHub, YouTube) are pulled into one card so you can close them all at once
-- **Close tabs with style** — swoosh sound + confetti burst when you clean up a group. Makes tab hygiene feel rewarding
-- **Duplicate detection** — flags when you have the same page open twice, with one-click cleanup
-- **Click any tab to jump to it** — switches to the existing tab, even across windows
-- **Save for later** — bookmark individual tabs to a checklist before closing them
-- **Dark mode** — sun/moon toggle with a full dark palette, persists across sessions
-- **Google search** — search bar built into the dashboard so you never need to open a blank tab
-- **Daily quote** — rotating motivational quote below the search bar to start each day right
-- **Weather widget** — current temperature and conditions in the header, no API key needed
-- **Pomodoro timer** — 25/5 work-break timer in the header, survives tab closes
-- **Recently closed tabs** — collapsible list of tabs you just closed, one click to reopen
-- **Drag-to-reorder quick links** — rearrange your shortcut icons with drag and drop, order persists
-- **Expandable groups** — large groups show the first 8 tabs with a clickable "+N more" to reveal the rest
-- **Auto-updates** — get notified when a new version is available, update with one click
-- **100% local** — your browsing data never leaves your machine. No AI, no external API calls
-- **Always on** — starts automatically when you log in, runs silently in the background
+- **See all your tabs at a glance** — clean grid grouped by domain
+- **Homepages group** — Gmail, X, YouTube, LinkedIn, GitHub homepages in one card
+- **Close tabs with style** — swoosh sound + confetti burst
+- **Duplicate detection** — flags the same page open twice, one-click cleanup
+- **Click any tab to jump to it** — works across windows
+- **Save for later** — bookmark tabs to a checklist before closing
+- **Restore archived tabs** — move completed items back to the active list
+- **Localhost grouping** — shows port numbers so you can tell projects apart
+- **100% local** — your data never leaves your machine
 
 ---
 
-## 🚀 Getting Started
+## Chrome — Manual Setup
 
-### Install with a coding agent
-
-Send your coding agent (Claude Code, Cursor, Windsurf, etc.) this repo and say **"install this"**:
-
-```
-https://github.com/markksantos/tab-out
-```
-
-The agent will explain what Tab Out does and set everything up. Takes about 2 minutes.
-
-### Manual setup
-
-**1. Clone and install**
+**1. Clone the repo**
 
 ```bash
-git clone https://github.com/markksantos/tab-out.git
-cd tab-out
-npm install
+git clone https://github.com/Kibson350/tab-out-kiran.git
 ```
 
-**2. Run the setup script**
+**2. Load the extension**
 
-```bash
-npm run install-service
-```
-
-This creates `~/.mission-control/`, writes a default config, and installs an auto-start service for your platform (macOS Launch Agent, Linux systemd, or Windows Startup script).
-
-**3. Load the Chrome extension**
-
-1. Go to `chrome://extensions` in Chrome
+1. Go to `chrome://extensions`
 2. Enable **Developer mode** (top-right toggle)
 3. Click **Load unpacked**
-4. Select the `extension/` folder from this repo
+4. Select the `extension/` folder
 
-**4. Start the server**
+**3. Open a new tab** — you'll see Tab Out.
+
+---
+
+## Safari — Install & update (one-liner)
+
+Safari extensions must be signed with your Apple Developer certificate — they can't be distributed as a pre-built binary. The `build-safari.sh` script handles everything: pull, build, sign, and install.
+
+**First time — clone and build:**
 
 ```bash
-npm start
+git clone https://github.com/Kibson350/tab-out-kiran.git ~/tab-out && bash ~/tab-out/build-safari.sh
 ```
 
-Open a new tab — you'll see Tab Out. The server auto-starts on future logins.
+**After any commit — update:**
+
+```bash
+bash ~/tab-out/build-safari.sh
+```
+
+This will:
+1. Pull latest from `main`
+2. Build the Xcode project signed with your Apple Development certificate
+3. Copy the app to `/Applications` and restart it
+
+**After running it:**
+1. Open Safari → Settings → Extensions → enable **Tab Out**
+2. Go to **Develop → Allow Unsigned Extensions**
+
+> **Note:** If you don't see a Develop menu, go to Safari → Settings → Advanced → check "Show features for web developers"
+
+> **Note:** `build-safari.sh` has a hardcoded certificate hash — if you're setting this up on a different machine, replace the `CODE_SIGN_IDENTITY` value in the script with your own certificate hash from `security find-identity -p codesigning -v`
 
 ---
 
-## ⚙️ Configuration
+## Safari — Build from source (Xcode)
 
-Config lives at `~/.mission-control/config.json`:
+If you want to build the Safari extension yourself:
 
-| Field | Default | What it does |
-|-------|---------|-------------|
-| `port` | `3456` | Local port for the dashboard |
+**1. Clone and convert**
+
+```bash
+git clone https://github.com/Kibson350/tab-out-kiran.git
+cd tab-out-kiran
+xcrun safari-web-extension-converter safari-extension/ \
+  --project-location . \
+  --app-name "Tab Out" \
+  --bundle-identifier "com.tabout.extension" \
+  --no-open
+```
+
+**2. Open in Xcode**
+
+```bash
+open "Tab Out/Tab Out.xcodeproj"
+```
+
+**3. Sign and run**
+
+1. Select the `Tab Out (macOS)` scheme
+2. For each target (Tab Out macOS + Tab Out Extension macOS): Signing & Capabilities → set your Apple ID as the Team
+3. Hit **⌘R**
+
+**4. Enable in Safari**
+
+Safari → Settings → Extensions → enable **Tab Out**
 
 ---
 
-## 🔧 How it works
+## How updates work
 
-```
-You open a new tab
-  -> Chrome extension loads Tab Out in an iframe
-  -> Dashboard shows your open tabs grouped by domain
-  -> Landing pages (Gmail, X, LinkedIn, etc.) get their own group at the top
-  -> You close groups you're done with (swoosh + confetti)
-  -> Repeat
-```
-
-The server runs silently in the background. It starts on login and restarts if it crashes. You never think about it.
+Commit and push to `main`, then run `bash ~/tab-out/build-safari.sh`. The script pulls the latest, rebuilds, and reinstalls — one command for the full cycle.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech stack
 
 | What | How |
 |------|-----|
-| Server | Node.js + Express |
-| Database | better-sqlite3 (local SQLite) |
-| Extension | Chrome Manifest V3 |
-| Auto-start | macOS Launch Agent / Linux systemd / Windows Startup |
+| Chrome extension | Manifest V3 |
+| Safari extension | Safari Web Extension (Xcode wrapper) |
+| Storage | `chrome.storage.local` / `browser.storage.local` |
 | Sound | Web Audio API (synthesized, no files) |
-| Animations | CSS transitions + JS confetti particles |
-| Weather | wttr.in (no API key) |
+| Animations | CSS transitions + JS confetti |
+| Auto-build | GitHub Actions + `xcodebuild` |
 
 ---
 
-## 📄 License
+## License
 
 MIT
-
----
-
-Originally built by [Zara](https://x.com/zarazhangrui). This fork adds dark mode, search, daily quotes, weather, pomodoro timer, recently closed tabs, and drag-to-reorder quick links.

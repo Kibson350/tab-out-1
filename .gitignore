@@ -4,8 +4,6 @@ node_modules/
 .DS_Store
 docs/superpowers/
 
-
-# Environment
-.env
-.env.local
-.env.*.local
+# Personal config (landing page patterns, etc.) — never push to GitHub
+extension/config.local.js
+.build/
