@@ -127,6 +127,8 @@ Commit and push to `main`, then run `bash ~/tab-out/build-safari.sh`. The script
 
 ---
 
-## License
+## 📄 License
 
 MIT
+
+Originally built by Zara. This fork adds dark mode, search, daily quotes, weather, pomodoro timer, recently closed tabs, and drag-to-reorder quick links.
